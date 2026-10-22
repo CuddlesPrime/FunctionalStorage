@@ -4,7 +4,9 @@ package com.buuz135.functionalstorage.recipe;
 import com.buuz135.functionalstorage.FunctionalStorage;
 import com.buuz135.functionalstorage.block.FramedBlock;
 import com.buuz135.functionalstorage.block.FramedDrawerBlock;
+import com.buuz135.functionalstorage.block.config.FunctionalStorageConfig;
 import net.minecraft.core.HolderLookup;
+import net.minecraft.core.NonNullList;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.CraftingBookCategory;
@@ -39,6 +41,20 @@ public class FramedDrawerRecipe extends CustomRecipe {
     @Override
     public ItemStack assemble(CraftingInput inv, HolderLookup.Provider registryAccess) {
         return FramedDrawerBlock.fill(inv.getItem(0), inv.getItem(1), inv.getItem(2).copy(), inv.size() >= 4 ? inv.getItem(3) : ItemStack.EMPTY);
+    }
+
+    @Override
+    public NonNullList<ItemStack> getRemainingItems(CraftingInput inv) {
+        NonNullList<ItemStack> remaining = super.getRemainingItems(inv);
+        if (FunctionalStorageConfig.FRAMED_RECIPE_KEEPS_MATERIALS) {
+            // Slot 2 is the drawer, the rest are the materials
+            for (int slot : new int[]{0, 1, 3}) {
+                if (slot < inv.size() && !inv.getItem(slot).isEmpty()) {
+                    remaining.set(slot, inv.getItem(slot).copyWithCount(1));
+                }
+            }
+        }
+        return remaining;
     }
 
     @Override

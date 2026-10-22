@@ -54,6 +54,9 @@ public class FunctionalStorageConfig {
     @ConfigVal.InRangeInt(min = 1)
     public static int RANGE_DIVISOR = 4;
 
+    @ConfigVal(comment = "If true, framing a drawer in a crafting grid gives the material blocks back instead of consuming them")
+    public static boolean FRAMED_RECIPE_KEEPS_MATERIALS = false;
+
     public static int getLevelMult(int level){
         return switch (level){
             case -1 -> Integer.MAX_VALUE;
